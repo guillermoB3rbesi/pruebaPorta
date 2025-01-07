@@ -5,15 +5,35 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
+import { computed, ref } from 'vue';
 
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    phone: '',
+    avatar: '',
+});
+
+const phone = ref('');
+const isPhoneValid = ref(false);
+
+const urlTemp = computed(() => {
+    if (!form.avatar)
+        return 'https://cdn-icons-png.flaticon.com/512/12225/12225935.png';
+    return URL.createObjectURL(form.avatar);
 });
 
 const submit = () => {
+    if (isPhoneValid.value === false) {
+        form.errors.phone = 'Invalid phone number';
+        return;
+    }
+    form.errors.phone = '';
+    form.phone = phone.value;
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -25,6 +45,23 @@ const submit = () => {
         <Head title="Register" />
 
         <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="avatar" value="Avatar" />
+                <label for="avatar">
+                    <img
+                        class="mx-auto h-[200px] w-[200px] rounded-full"
+                        :src="urlTemp"
+                    />
+                </label>
+                <input
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    class="hidden"
+                    @input="form.avatar = $event.target.files[0]"
+                />
+                <InputError class="mt-2" :message="form.errors.avatar" />
+            </div>
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -54,6 +91,19 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="phone" value="Phone" />
+
+                <vue-tel-input
+                    id="phone"
+                    v-model="phone"
+                    @validate="(ph) => (isPhoneValid = ph.valid)"
+                    mode="international"
+                ></vue-tel-input>
+
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div class="mt-4">
