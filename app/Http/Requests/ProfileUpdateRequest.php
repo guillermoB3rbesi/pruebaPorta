@@ -25,6 +25,15 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'phone' => 'required|string',
+            'avatar_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
+    }
+
+    public function prepareForValidation(): void
+    {
+        if(!$this->hasFile('avatar_img')){
+            $this->merge(['avatar_img' => null]);
+        }
     }
 }

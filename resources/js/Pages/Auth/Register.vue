@@ -33,7 +33,6 @@ const submit = () => {
         return;
     }
     form.errors.phone = '';
-    form.phone = phone.value;
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -98,8 +97,8 @@ const submit = () => {
 
                 <vue-tel-input
                     id="phone"
-                    v-model="phone"
-                    @validate="(ph) => (isPhoneValid = ph.valid)"
+                    v-model="form.phone"
+                    @validate="(telInput) => (isPhoneValid = telInput.valid)"
                     mode="international"
                 ></vue-tel-input>
 
