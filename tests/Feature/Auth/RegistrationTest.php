@@ -11,7 +11,7 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
-    Storage::fake('avatars');
+    Storage::fake('public');
     $avatar = UploadedFile::fake()->image('avatar.jpg');
     $response = $this->post('/register', $data = [
         'name' => 'Test User',
@@ -29,5 +29,6 @@ test('new users can register', function () {
     $this->assertEquals($data['name'], $user->name);
     $this->assertTrue(Hash::check($data['password'], $user->password));
     $this->assertEquals($data['phone'], $user->phone);
-    Storage::disk('avatars')->assertExists($avatar->hashName());
+
+    Storage::disk('public')->assertExists($user->avatar);
 });
