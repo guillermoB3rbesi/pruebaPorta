@@ -54,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->avatar ? 'storage/'.$this->avatar: '';
     }
+
+    public function saveLoginDate():void
+    {
+        $this->latest_login = now();
+        $this->save();
+    }
 }

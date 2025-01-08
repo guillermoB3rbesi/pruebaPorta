@@ -52,6 +52,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        $user->saveLoginDate();
 
         return redirect(route('dashboard', absolute: false));
     }
