@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\SendLatestLoginMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,5 +60,10 @@ class User extends Authenticatable
     {
         $this->latest_login = now();
         $this->save();
+    }
+
+    public function sendEmailLatestLogin(): void
+    {
+      $this->notify(new SendLatestLoginMail());
     }
 }
